@@ -1,13 +1,6 @@
 # DiffusionCLIP: Text-Guided Diffusion Models for Robust Image Manipulation (CVPR 2022) 
 
-
-The training process is illustreted in the following figure:
- 
-![](imgs/method1.png)
-
-We also propose two fine-tuning scheme. Quick original fine-tuning and GPU-efficient fine-tuning. For more details, please refer to Sec. B.1 in Supplementary Material.
-![](imgs/method2.png)
-
+This is a modification to the original PyTorch implementation of DiffusionCLIP to enable easier dataloading.
 
 ## Getting Started
 
@@ -45,14 +38,7 @@ To manipulate soure images into images in CLIP-guided domain, the **pretrained D
 
 
 ### Datasets 
-To precompute latents and fine-tune the Diffusion models, you need about 30+ images in the source domain. You can use both **sampled images** from the pretrained models or **real source images** from the pretraining dataset. 
-If you want to use [CelebA-HQ](https://drive.google.com/drive/folders/0B4qLcYyJmiz0TXY1NG02bzZVRGs?resourcekey=0-arAVTUfW9KRhN-irJchVKQ), [LSUN-Church](https://www.yf.io/p/lsun), [LSUN-Bedroom](https://www.yf.io/p/lsun) and [AFHQ-Dog](https://github.com/clovaai/stargan-v2) and [ImageNet](https://image-net.org/index.php)  datastet directly, you can download them and fill their paths in `./configs/paths_config.py`. 
-
-### Colab Notebook [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1E8QHZ3BbkF6hzk0rRKzhfkySmYf_BZaE?usp=sharing)
-We provide a colab notebook for you to play with DiffusionCLIP! Due to 12GB of the VRAM limit in Colab, we only provide the codes of inference & applications with the fine-tuned DiffusionCLIP models, not fine-tuning code. 
-We provide a wide range of types of edits, and you can also upload your fine-tuned models following below instructions on Colab and test them.
-
-
+To precompute latents and fine-tune the Diffusion models, you need about 30+ images in the source domain. Download them and fill their paths in `./configs/paths_config.py`. 
 
 ## DiffusionCLIP Fine-tuning 
 
@@ -131,62 +117,6 @@ python main.py --edit_images_from_dataset  \
 ### Image Translation from Unseen Domain into Another Unseen Domain
 ![](imgs/app_2_unseen2unseen.png)
 
-
-###  Generation of Images in Unseen Domain from Strokes
-![](imgs/app_3_stroke2unseen.png)
-You can tranlate images from an unseen domain to another unseen domain. (e.g. Stroke/Anime ➝ Neanderthal) using following command: 
-
-```
-python main.py --unseen2unseen          \
-               --config celeba.yml      \
-               --exp ./runs/test        \
-               --t_0 500                \
-               --bs_test 4              \
-               --n_iter 10              \
-               --n_inv_step 40          \
-               --n_test_step 40         \
-               --img_path imgs/stroke1.png \
-               --model_path  checkpoint/neanderthal.pth
-```
-- `img_path`: Stroke image or source image in the unseen domain e.g. portrait
-- `n_iter`: # of iterations of stochastic foward and generative processes to translate an unseen source image into the image in the trained domain. It's required to be larger than 8. 
-
-### Multiple Attribute Changes
-![](imgs/app_4_multiple_change.png)
-You can change multiple attributes thorugh only one generative process by mixing the noise from the multipe fintuned models.
-1. Set `HYBRID_MODEL_PATHS` of `HYBRID_CONFIG` in `./configs/paths_config`. The keys of 
-2. Run the commands for above **Manipulation of Images in Trained Domain & to Unseen Domain** with `--hybrid_noise 1`   
-
-```
-HYBRID_MODEL_PATHS = [
-	'curly_hair.pth',
-	'makeup.pth',
-]
-
-HYBRID_CONFIG = \
-	{ 300: [1, 0],**
-	    0: [0.3, 0.7]}
-```
-
-The keys and values of `HYBRID_CONFIG` dictionary correspond to thresholds and ratios for the noise mixing process using multiple models. The following pseudo-code represent the noise mixing process. The full codes are in `./utils/diffusion_utils.py`.
-```
-# models: list of the finetuned diffusion models 
-
-for thr in list(HYBRID_CONFIG.keys()):
-    if t >= thr:
-        et = 0
-        for i, ratio in enumerate(HYBRID_CONFIG[thr]):
-            ratio /= sum(HYBRID_CONFIG[thr])
-            et_i = models[i](xt, t)
-            et += ratio * et_i
-        break
-```
-
-## Finetuned Models Using DiffuionCLIP
-
-We provide a Google Drive containing several fintuned models using DiffusionCLIP. [Human Face, Dog Face, Church, Bedroom](https://drive.google.com/drive/folders/1Uwvm_gckanyRzQkVTLB6GLQbkSBoZDZF?usp=sharing),
-[ImageNet Style Transfer](https://drive.google.com/drive/folders/1Qb9jcv3Be3k7UtVQykI2PWqznUzb0t8R?usp=sharing), [ImageNet Tennis Ball](https://drive.google.com/drive/folders/1I3rhsPbEkQkWeoGW9kryv8nB_eLeHXfY?usp=sharing)
-
 ## Related Works
 
 Usage of guidance by [CLIP](https://arxiv.org/abs/2103.00020) to manipulate images is motivated by [StyleCLIP](https://arxiv.org/abs/2103.17249) and [StyleGAN-NADA](https://arxiv.org/abs/2108.00946).
@@ -205,29 +135,3 @@ If you find DiffusionCLIP useful in your research, please consider citing:
       journal={arXiv preprint arXiv:2110.02711},
       year={2021}
     }
-
-
-## Additional Results
-
-Here, we show more manipulation of real images in the diverse datasets using DiffusionCLIP where the original pretrained models
-are trained on [AFHQ-Dog](https://arxiv.org/abs/1912.01865), [LSUN-Bedroom](https://www.yf.io/p/lsun) and [ImageNet](https://image-net.org/index.php), respectively.
-
-[comment]: <> (![]&#40;imgs/more_manipulation1.png&#41;)
-
-[comment]: <> (![]&#40;imgs/more_manipulation2.png&#41;)
-
-[comment]: <> (![]&#40;imgs/more_manipulation3.png&#41;)
-
-[comment]: <> (![]&#40;imgs/more_manipulation4.png&#41;)
-
-<p align="center">
-
-  <img src="https://github.com/submission10095/DiffusionCLIP_temp/blob/master/imgs/more_manipulation1.png" />
-
-  <img src="https://github.com/submission10095/DiffusionCLIP_temp/blob/master/imgs/more_manipulation2.png" />
-
-  <img src="https://github.com/submission10095/DiffusionCLIP_temp/blob/master/imgs/more_manipulation3.png" />
-
-  <img src="https://github.com/submission10095/DiffusionCLIP_temp/blob/master/imgs/more_manipulation4.png" />
-
-</p>
