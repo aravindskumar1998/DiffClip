@@ -5,12 +5,9 @@ This is a modification to the original PyTorch implementation of DiffusionCLIP t
 ## Getting Started
 
 ### Installation
-We recommend running our code using:
 
-- NVIDIA GPU + CUDA, CuDNN
-- Python 3, Anaconda
 
-To install our implementation, clone our repository and run following commands to install necessary packages:
+Clone repository and run following commands to install necessary packages:
   ```shell script
 conda install --yes -c pytorch pytorch=1.7.1 torchvision cudatoolkit=<CUDA_VERSION>
 pip install -r requirements.txt
@@ -75,60 +72,3 @@ python main.py --clip_finetune          \
 - `id_loss_w`, `l1_loss` : Weights of ID loss and L1 loss when CLIP loss weight is 3.
 
 
-
-## Novel Applications
-
-The fine-tuned models through DiffusionCLIP can be leveraged to perform the several novel applications. 
-
-### Manipulation of Images in Trained Domain & to Unseen Domain
-![](imgs/app_1_manipulation.png)
-
-You can edit one image into the CLIP-guided domain by running the following command:
-``` 
-python main.py --edit_one_image            \
-               --config celeba.yml         \
-               --exp ./runs/test           \
-               --t_0 500                   \
-               --n_inv_step 40             \
-               --n_test_step 40            \
-               --n_iter 1                  \
-               --img_path imgs/celeb1.png  \
-               --model_path  checkpoint/neanderthal.pth
-```
-- `img_path`: Path of an image to edit
-- `model_path`: Finetuned model path to use
-
-You can edit multiple images from the dataset into the CLIP-guided domain by running the following command:
-```
-python main.py --edit_images_from_dataset  \
-               --config celeba.yml         \
-               --exp ./runs/test           \
-               --n_test_img 50             \
-               --t_0 500                   \
-               --n_inv_step 40             \
-               --n_test_step 40            \
-               --model_path checkpoint/neanderthal.pth
-```
- 
-
-### Image Translation from Unseen Domain into Another Unseen Domain
-![](imgs/app_2_unseen2unseen.png)
-
-## Related Works
-
-Usage of guidance by [CLIP](https://arxiv.org/abs/2103.00020) to manipulate images is motivated by [StyleCLIP](https://arxiv.org/abs/2103.17249) and [StyleGAN-NADA](https://arxiv.org/abs/2108.00946).
-Image translation from an unseen domain to the trained domain using diffusion models is introduced in [SDEdit](https://arxiv.org/abs/2108.01073), [ILVR](https://arxiv.org/abs/2108.02938).
-DDIM sampling and its reveral for generation and inversion of images are introduced by in [DDIM](https://arxiv.org/abs/2010.02502), [Diffusion Models Beat GANs on Image Synthesis](https://arxiv.org/abs/2105.05233).
-
-Our code strcuture is based on the official codes of [SDEdit](https://github.com/ermongroup/SDEdit) and [StyleGAN-NADA](https://github.com/rinongal/StyleGAN-nada). We used pretrained models from [SDEdit](https://github.com/ermongroup/SDEdit) and [ILVR](https://github.com/jychoi118/ilvr_adm).
-
-
-## Citation
-If you find DiffusionCLIP useful in your research, please consider citing:
-
-    @article{kim2021diffusionclip,
-      title={Diffusionclip: Text-guided image manipulation using diffusion models},
-      author={Kim, Gwanghyun and Ye, Jong Chul},
-      journal={arXiv preprint arXiv:2110.02711},
-      year={2021}
-    }
