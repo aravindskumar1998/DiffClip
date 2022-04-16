@@ -1,42 +1,5 @@
 # DiffusionCLIP: Text-Guided Diffusion Models for Robust Image Manipulation (CVPR 2022) 
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1E8QHZ3BbkF6hzk0rRKzhfkySmYf_BZaE?usp=sharing) [![arXiv](https://img.shields.io/badge/arXiv-2110.02711-red)](https://arxiv.org/abs/2110.02711)
-
-<p align="center">
-
-  <img src="https://github.com/submission10095/DiffusionCLIP_temp/blob/master/imgs/main1.png" />
-
-  <img src="https://github.com/submission10095/DiffusionCLIP_temp/blob/master/imgs/main2.png" />
-
-</p> 
-
-[comment]: <> (![]&#40;imgs/main1.png&#41;)
-
-[comment]: <> (![]&#40;imgs/main2.png&#41;)
-
-> **DiffusionCLIP: Text-Guided Diffusion Models for Robust Image Manipulation**<br>
-> [Gwanghyun Kim](https://gwang-kim.github.io/), Taesung Kwon, [Jong Chul Ye](https://bispl.weebly.com/professor.html) <br>
-> CVPR 2022
-> 
->**Abstract**: <br>
-Recently, GAN inversion methods combined with Contrastive Language-Image Pretraining (CLIP) enables zero-shot image manipulation guided by text prompts. 
-> However, their applications to diverse real images are still difficult due to the limited GAN inversion capability. 
-> Specifically, these approaches often have difficulties in reconstructing images with novel poses, views, and highly variable contents compared to the training data, altering object identity, or producing unwanted image artifacts. 
-> To mitigate these problems and enable faithful manipulation of real images, we propose a novel method, dubbed DiffusionCLIP, that performs text-driven image manipulation using diffusion models. 
-> Based on full inversion capability and high-quality image generation power of recent diffusion models, our method performs zero-shot image manipulation successfully even between unseen domains 
-> and takes another step towards general application by manipulating images from a widely varying ImageNet dataset.
-> Furthermore, we propose a novel noise combination method that allows straightforward multi-attribute manipulation. 
-> Extensive experiments and human evaluation confirmed robust and superior manipulation performance of our methods compared to the existing baselines.
-
-## Description
-
-This repo includes the official PyTorch implementation of DiffusionCLIP, Text-Guided Diffusion Models for Robust Image Manipulation.
-DiffusionCLIP resolves the critical issues in zero-shot manipulation with the following contributions.
-- We revealed that diffusion model is well suited for image manipulation thanks to its nearly **perfect inversion** capability, which is an important advantage over GAN-based models and hadn't been analyzed in depth before our detailed comparison.
-- Our novel sampling strategies for fine-tuning can preserve perfect reconstruction at **increased speed**.
-- In terms of empirical results, our method enables accurate **in- and out-of-domain manipulation**, minimizes unintended changes, and significantly outperformes SOTA baselines. 
-- **Our method takes another step towards <span style="color:red">general application</span> by manipulating images from a <span style="color:red">widely varying ImageNet</span> dataset**.
-- Finally, our **zero-shot translation between unseen domains** and **multi-attribute transfer** can effectively reduce manual intervention.
 
 The training process is illustreted in the following figure:
  
